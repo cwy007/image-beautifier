@@ -1,39 +1,62 @@
-import { useMemo, useEffect } from 'react';
-import { message } from 'antd';
-import { observer } from 'mobx-react-lite';
-import Header from '@components/header/Header';
-import Editor from '@components/editor/Editor';
-import { ConfigProvider, theme } from 'antd';
-import { StyleProvider } from '@ant-design/cssinjs';
-import SideBar from '@components/sideBar/SideBar';
-import Init from '@components/init/Init';
-import stores from '@stores';
-import useSetImg from '@hooks/useSetImg';
-import { cn } from '@utils/utils';
-import '@style/main.css';
+import { useMemo, useEffect } from "react";
+import { message } from "antd";
+import { observer } from "mobx-react-lite";
+import { ConfigProvider, theme } from "antd";
+import { StyleProvider } from "@ant-design/cssinjs";
 
-export default observer(({ defaultImg, headLeft, headRight, isDark, boxClassName = '', onClear }) => {
+import Header from "@components/header/Header";
+import Editor from "@components/editor/Editor";
+import SideBar from "@components/sideBar/SideBar";
+import Init from "@components/init/Init";
+import useSetImg from "@hooks/useSetImg";
+import stores from "@stores";
+import "@style/main.css";
+import { cn } from "@utils/utils";
+
+const ImageBeautifier = ({
+  defaultImg,
+  headLeft,
+  headRight,
+  isDark,
+  boxClassName = "",
+  onClear,
+}) => {
   const getFile = useSetImg(stores);
-  const workplace = stores.editor.img?.src ? <Editor /> : <Init />
+  const workplace = stores.editor.img?.src ? <Editor /> : <Init />;
   const [messageApi, contextHolder] = message.useMessage();
   stores.editor.setMessage(messageApi);
   stores.editor.setClearFun(onClear);
+
   useMemo(() => {
-    const mode = isDark || localStorage.getItem('SHOTEASY_BEAUTIFIER_THEME') === 'dark' ? 'dark' : 'light';
+    const mode =
+      isDark || localStorage.getItem("SHOTEASY_BEAUTIFIER_THEME") === "dark"
+        ? "dark"
+        : "light";
     stores.editor.setTheme(mode);
   }, [isDark]);
+
   useEffect(() => {
-    if (defaultImg) getFile(defaultImg, 'dataURL');
+    if (defaultImg) getFile(defaultImg, "dataURL");
   }, [defaultImg]);
+
   return (
     <StyleProvider>
       <ConfigProvider
         theme={{
-          algorithm: stores.editor.isDark ? theme.darkAlgorithm : theme.defaultAlgorithm
+          algorithm: stores.editor.isDark
+            ? theme.darkAlgorithm
+            : theme.defaultAlgorithm,
         }}
       >
         {contextHolder}
-        <div id="shoteasy-container" className={cn("polka flex flex-col overflow-hidden antialiased w-full h-[100vh] dark:bg-black", boxClassName)} data-mode={stores.editor.isDark?'dark':'light'}>
+        <div
+          id="shoteasy-container"
+          className={cn(
+            "polka flex flex-col overflow-hidden antialiased w-full h-[100vh] dark:bg-black",
+            boxClassName
+          )}
+          data-mode={stores.editor.isDark ? "dark" : "light"}
+        >
           <Header headLeft={headLeft} headRight={headRight} />
           <div className="flex flex-col flex-1 h-0 md:flex-row md:items-stretch">
             {workplace}
@@ -42,5 +65,7 @@ export default observer(({ defaultImg, headLeft, headRight, isDark, boxClassName
         </div>
       </ConfigProvider>
     </StyleProvider>
-  )
-});
+  );
+};
+
+export default observer(ImageBeautifier);
