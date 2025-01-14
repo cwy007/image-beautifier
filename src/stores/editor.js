@@ -11,9 +11,16 @@ class Editor {
   annotateColor = "#ff0000";
   strokeWidth = 4;
   shapes = new Map();
+
+  /** ant design messageInstance */
   message = null;
+
+  /** 主题 - dark | light */
   theme = "light";
+
+  /** props onClear */
   clearFun = null;
+
   snap = null;
 
   constructor() {
@@ -48,6 +55,7 @@ class Editor {
     return 1;
   }
 
+  /** theme === 'dark' */
   get isDark() {
     return this.theme === "dark";
   }
@@ -74,8 +82,10 @@ class Editor {
     ex();
   }
 
+  /** 设置主题 - 深/浅色 */
   setTheme(value) {
     if (value === this.theme) return;
+
     runInAction(() => {
       if (value) {
         this.theme = value;
@@ -100,6 +110,7 @@ class Editor {
     this.img = value;
   }
 
+  /** set ant design messageInstance */
   setMessage(value) {
     this.message = value;
   }
@@ -164,6 +175,7 @@ class Editor {
     }
   }
 
+  /** set props onClear */
   setClearFun(value) {
     this.clearFun = value;
   }

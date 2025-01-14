@@ -23,7 +23,9 @@ const ImageBeautifier = ({
 }) => {
   const getFile = useSetImg(stores);
   const workplace = stores.editor.img?.src ? <Editor /> : <Init />;
+
   const [messageApi, contextHolder] = message.useMessage();
+
   stores.editor.setMessage(messageApi);
   stores.editor.setClearFun(onClear);
 
@@ -49,6 +51,7 @@ const ImageBeautifier = ({
         }}
       >
         {contextHolder}
+
         <div
           id="shoteasy-container"
           className={cn(

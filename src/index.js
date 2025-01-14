@@ -1,1 +1,1 @@
-export { default as ImageBeautifier } from './App';
+export { default as ImageBeautifier } from './ImageBeautifier';
