@@ -1,175 +1,184 @@
-import { makeAutoObservable, toJS, action, runInAction } from 'mobx';
-import { maxBy } from 'lodash';
+import { makeAutoObservable, toJS, action, runInAction } from "mobx";
+import { maxBy } from "lodash";
 
 let timer;
 class Editor {
-    img = {};
-    invalid = false;
-    app = null;
-    scale = 100;
-    useTool = null;
-    annotateColor = '#ff0000';
-    strokeWidth = 4;
-    shapes = new Map();
-    message = null;
-    theme = 'light';
-    clearFun = null;
-    snap = null;
-    constructor () {
-        makeAutoObservable(this)
-    }
+  img = {};
+  invalid = false;
+  app = null;
+  scale = 100;
+  useTool = null;
+  annotateColor = "#ff0000";
+  strokeWidth = 4;
+  shapes = new Map();
+  message = null;
+  theme = "light";
+  clearFun = null;
+  snap = null;
 
-    get shapesList() {
-        return Array.from(toJS(this.shapes).values());
-    }
+  constructor() {
+    makeAutoObservable(this);
+  }
 
-    get cursor() {
-        return this.useTool === 'Pencil' ? 'pencil' : this.useTool ? 'crosshair' : 'auto'
-    }
+  get shapesList() {
+    return Array.from(toJS(this.shapes).values());
+  }
 
-    get isEditing() {
-        const is = !!this.app?.tree;
-        if (!is) {
-            this.message.info('Please add a image');
-            this.setInvalid();
+  get cursor() {
+    return this.useTool === "Pencil"
+      ? "pencil"
+      : this.useTool
+      ? "crosshair"
+      : "auto";
+  }
+
+  get isEditing() {
+    const is = !!this.app?.tree;
+    if (!is) {
+      this.message.info("Please add a image");
+      this.setInvalid();
+    }
+    return is;
+  }
+
+  get nextStep() {
+    const steps = this.shapesList.filter((e) => e.type === "Step");
+    const maxItem = maxBy(steps, (item) => Number(item.text));
+    if (maxItem?.text) return Number(maxItem.text) + 1;
+    return 1;
+  }
+
+  get isDark() {
+    return this.theme === "dark";
+  }
+
+  createSnap(type) {
+    if (type === "init" && this.snap?.data) return;
+    if (type !== "init" && this.snap === null) return;
+    const ex = async () => {
+      const frame = this.app?.tree?.children[0];
+      if (!frame) return;
+      frame.children.map((child) => {
+        if (child.id !== "screenshot-box") {
+          child.visible = false;
         }
-        return is;
-    }
+      });
+      const image = await frame
+        .export("png", { pixelRatio: 2 })
+        .catch(() => null);
+      frame.children.map((child) => (child.visible = true));
+      runInAction(() => {
+        this.snap = image;
+      });
+    };
+    ex();
+  }
 
-    get nextStep() {
-        const steps = this.shapesList.filter(e => e.type === 'Step');
-        const maxItem = maxBy(steps, (item) => Number(item.text));
-        if (maxItem?.text) return Number(maxItem.text) + 1;
-        return 1;
-    }
+  setTheme(value) {
+    if (value === this.theme) return;
+    runInAction(() => {
+      if (value) {
+        this.theme = value;
+      } else {
+        this.theme = this.isDark ? "light" : "dark";
+      }
+    });
+  }
 
-    get isDark() {
-        return this.theme === 'dark';
-    }
+  setInvalid() {
+    clearTimeout(timer);
+    this.invalid = true;
+    timer = setTimeout(
+      action(() => {
+        this.invalid = false;
+      }),
+      200
+    );
+  }
 
-    createSnap(type) {
-        if (type === 'init' && this.snap?.data) return;
-        if (type !== 'init' && this.snap === null) return;
-        const ex = async () => {
-            const frame = this.app?.tree?.children[0];
-            if (!frame) return;
-            frame.children.map(child => {
-                if (child.id !== 'screenshot-box') {
-                    child.visible = false;
-                }
-            });
-            const image = await frame.export('png', { pixelRatio: 2 }).catch(() => null);
-            frame.children.map(child => child.visible = true);
-            runInAction(() => {
-                this.snap = image;
-            });
-        };
-        ex();
-    }
+  setImg(value) {
+    this.img = value;
+  }
 
-    setTheme(value) {
-        if (value === this.theme) return;
-        runInAction(() => {
-            if (value) {
-                this.theme = value;
-            } else {
-                this.theme = this.isDark ? 'light' : 'dark';
-            }
-        });
-    }
+  setMessage(value) {
+    this.message = value;
+  }
 
-    setInvalid() {
-        clearTimeout(timer);
-        this.invalid = true;
-        timer = setTimeout(action(() => {
-            this.invalid = false;
-        }), 200);
-    }
+  getShape(id) {
+    return this.shapes.get(id);
+  }
 
-    setImg(value) {
-        this.img = value;
-    }
+  addShape(shape) {
+    this.shapes.set(shape.id, shape);
+  }
 
-    setMessage(value) {
-        this.message = value;
+  removeShape(shape) {
+    this.shapes.delete(shape.id);
+    if (this.snap && this.shapesList.every((e) => e.type !== "Magnifier")) {
+      this.snap = null;
     }
+  }
 
-    getShape(id) {
-        return this.shapes.get(id);
-    }
+  setApp(app) {
+    this.app = app;
+  }
 
-    addShape(shape) {
-        this.shapes.set(shape.id, shape);
-    }
+  setScale(value) {
+    this.scale = parseInt(value * 100);
+  }
 
-    removeShape(shape) {
-        this.shapes.delete(shape.id);
-        if (this.snap && this.shapesList.every(e => e.type !== 'Magnifier')) {
-            this.snap = null;
-        }
+  setUseTool(value) {
+    this.useTool = value;
+    if (value) {
+      this.setSelect(false);
+    } else {
+      this.setSelect(true);
     }
+  }
 
-    setApp(app) {
-        this.app = app;
-    }
+  setSelect(value) {
+    if (!this.app) return;
+    this.app.editor.app.config.move.drag = false;
+    this.app.editor.hittable = value;
+  }
 
-    setScale(value) {
-        this.scale = parseInt(value * 100);
+  setAnnotateColor(color) {
+    this.annotateColor = color;
+    if (!this.app?.editor) return;
+    const { list } = this.app.editor;
+    if (!list.length) return;
+    for (let item of list) {
+      const shape = this.shapes.get(item.id);
+      if (shape) shape.fill = color;
     }
+  }
 
-    setUseTool(value) {
-        this.useTool = value;
-        if (value) {
-            this.setSelect(false);
-        } else {
-            this.setSelect(true);
-        }
+  setStrokeWidth(value) {
+    this.strokeWidth = value;
+    if (!this.app?.editor) return;
+    const { list } = this.app.editor;
+    if (!list.length) return;
+    for (let item of list) {
+      const shape = this.shapes.get(item.id);
+      if (shape) shape.strokeWidth = value;
     }
+  }
 
-    setSelect(value) {
-        if (!this.app) return;
-        this.app.editor.app.config.move.drag = false;
-        this.app.editor.hittable = value;
-    }
-    
+  setClearFun(value) {
+    this.clearFun = value;
+  }
 
-    setAnnotateColor(color) {
-        this.annotateColor = color;
-        if (!this.app?.editor) return;
-        const { list } = this.app.editor;
-        if (!list.length) return;
-        for (let item of list) {
-            const shape = this.shapes.get(item.id);
-            if (shape) shape.fill = color;
-        }
-    }
+  clearImg() {
+    this.img = {};
+  }
 
-    setStrokeWidth(value) {
-        this.strokeWidth = value;
-        if (!this.app?.editor) return;
-        const { list } = this.app.editor;
-        if (!list.length) return;
-        for (let item of list) {
-            const shape = this.shapes.get(item.id);
-            if (shape) shape.strokeWidth = value;
-        }
-    }
-
-    setClearFun(value) {
-        this.clearFun = value;
-    }
-
-    clearImg() {
-        this.img = {};
-    }
-
-    destroy() {
-        this.app?.destroy(true);
-        this.app = null;
-        this.snap = null;
-        this.shapes.clear();
-        this.setUseTool(null);
-    }
+  destroy() {
+    this.app?.destroy(true);
+    this.app = null;
+    this.snap = null;
+    this.shapes.clear();
+    this.setUseTool(null);
+  }
 }
 
 const editor = new Editor();
