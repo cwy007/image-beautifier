@@ -6,7 +6,7 @@
 @tailwind utilities;
 
 @layer base {
-    #shoteasy-container,.shoteasy-components {
+    #image-beautifier-container,.shoteasy-components {
         --c-wb: #c2c2c2;
         --c-wc: #fcfcfc;
         --c-bg: #fbfbfb;
@@ -15,7 +15,7 @@
         --c-scroll: #d9d9d9;
         --c-scroll-hover: #bbbbbb;
     }
-    #shoteasy-container[data-mode="dark"],.shoteasy-components.dark-mode,.shoteasy-components [data-mode="dark"] {
+    #image-beautifier-container[data-mode="dark"],.shoteasy-components.dark-mode,.shoteasy-components [data-mode="dark"] {
         --c-wb: #444;
         --c-wc: #222;
         --c-bg: #2b2b2b;
@@ -24,7 +24,7 @@
         --c-scroll: #464646;
         --c-scroll-hover: #595858;
     }
-    #shoteasy-container,.shoteasy-components {
+    #image-beautifier-container,.shoteasy-components {
         @apply [&_::-webkit-scrollbar]:w-1.5 [&_::-webkit-scrollbar]:h-1.5;
         @apply [&_::-webkit-scrollbar-thumb]:bg-[var(--c-scroll)] [&_::-webkit-scrollbar-thumb]:rounded-md;
         @apply hover:[&_::-webkit-scrollbar-thumb]:bg-[var(--c-scroll-hover)];
@@ -33,7 +33,9 @@
 }
 
 @layer components {
+    /* 波尔卡圆点的背景图案 */
     .polka {
+        /* 圆锥和径向梯度 */
         background-image: radial-gradient(var(--c-wb) 0.7px, var(--c-wc) 1px);
         background-size: 14px 14px;
     }
@@ -71,8 +73,8 @@
         @apply after:top-8 after:left-8;
     }
     .bg-transparent {
-        background-image: 
-                linear-gradient(45deg, rgba(0, 0, 0, 0.4) 25%, transparent 25%, transparent 75%,rgba(0, 0, 0, 0.4) 75%), 
+        background-image:
+                linear-gradient(45deg, rgba(0, 0, 0, 0.4) 25%, transparent 25%, transparent 75%,rgba(0, 0, 0, 0.4) 75%),
                 linear-gradient(45deg,rgba(0, 0, 0, 0.4) 25%, transparent 25%, transparent 75%, rgba(0, 0, 0, 0.4) 75%);
         background-position: 0 0, 5px 5px;
         background-size: 10px 10px;

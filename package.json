@@ -40,6 +40,7 @@
     "lodash": "^4.17.21",
     "lucide-react": "^0.407.0",
     "mobx": "^6.13.0",
+    "mobx-log": "^2.2.3",
     "mobx-react-lite": "^4.0.7",
     "nanoid": "^5.0.7",
     "react": "^18.3.1",

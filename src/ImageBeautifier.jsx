@@ -16,8 +16,6 @@ import { cn } from "@utils/utils";
 /**
  *
  * @param {*} defaultImg blob | dataURL 默认显示的图片
- * @param headLeft
- * @param headRight
  * @param isDark boolean 主题颜色是否是深色 dark
  * @param boxClassName
  * @param onClear
@@ -25,16 +23,14 @@ import { cn } from "@utils/utils";
  */
 const ImageBeautifier = ({
   defaultImg,
-  headLeft,
-  headRight,
+  // headLeft,
+  // headRight,
   isDark,
   boxClassName = "",
   onClear,
 }) => {
-  const getFile = useSetImg(stores);
-  const workplace = stores.editor.img?.src ? <Editor /> : <Init />;
-
   const [messageApi, contextHolder] = message.useMessage();
+  const getFile = useSetImg(stores);
 
   stores.editor.setMessage(messageApi);
   stores.editor.setClearFun(onClear);
@@ -65,16 +61,19 @@ const ImageBeautifier = ({
         {contextHolder}
 
         <div
-          id="shoteasy-container"
+          id="image-beautifier-container"
           className={cn(
             "polka flex flex-col overflow-hidden antialiased w-full h-[100vh] dark:bg-black",
             boxClassName
           )}
-          data-mode={stores.editor.isDark ? "dark" : "light"}
+          data-mode={stores.editor.isDark ? "dark" : "light"} // 深浅色主题
         >
-          <Header headLeft={headLeft} headRight={headRight} />
+          <Header />
+
           <div className="flex flex-col flex-1 h-0 md:flex-row md:items-stretch">
-            {workplace}
+            {/* workplace */}
+            {stores.editor.img?.src ? <Editor /> : <Init />}
+
             <SideBar />
           </div>
         </div>

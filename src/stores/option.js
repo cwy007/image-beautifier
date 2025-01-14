@@ -1,5 +1,8 @@
 import { makeAutoObservable, toJS } from "mobx";
+import { applyFormatters, makeLoggable } from 'mobx-log';
 import backgroundConfig from "@utils/backgroundConfig";
+
+applyFormatters();
 
 class Option {
   scale = 1;
@@ -39,6 +42,7 @@ class Option {
 
   constructor() {
     makeAutoObservable(this);
+    makeLoggable(this);
   }
 
   get waterSvg() {

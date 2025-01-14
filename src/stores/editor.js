@@ -1,5 +1,8 @@
 import { makeAutoObservable, toJS, action, runInAction } from "mobx";
+import { applyFormatters, makeLoggable } from 'mobx-log';
 import { maxBy } from "lodash";
+
+applyFormatters();
 
 let timer;
 class Editor {
@@ -15,11 +18,18 @@ class Editor {
   img = {};
 
   invalid = false;
+
+  /**  */
   app = null;
+
   scale = 100;
   useTool = null;
   annotateColor = "#ff0000";
+
+  /** 标注线条粗细 */
   strokeWidth = 4;
+
+  /** 标注的内容 */
   shapes = new Map();
 
   /** ant design messageInstance */
@@ -35,6 +45,7 @@ class Editor {
 
   constructor() {
     makeAutoObservable(this);
+    makeLoggable(this);
   }
 
   get shapesList() {
@@ -70,6 +81,7 @@ class Editor {
     return this.theme === "dark";
   }
 
+  // undo
   createSnap(type) {
     if (type === "init" && this.snap?.data) return;
     if (type !== "init" && this.snap === null) return;
@@ -175,8 +187,10 @@ class Editor {
     }
   }
 
+  /** 标注线条粗细 */
   setStrokeWidth(value) {
     this.strokeWidth = value;
+
     if (!this.app?.editor) return;
     const { list } = this.app.editor;
     if (!list.length) return;
