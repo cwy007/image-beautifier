@@ -13,6 +13,16 @@ import stores from "@stores";
 import "@style/main.css";
 import { cn } from "@utils/utils";
 
+/**
+ *
+ * @param {*} defaultImg blob | dataURL 默认显示的图片
+ * @param headLeft
+ * @param headRight
+ * @param isDark boolean 主题颜色是否是深色 dark
+ * @param boxClassName
+ * @param onClear
+ * @returns
+ */
 const ImageBeautifier = ({
   defaultImg,
   headLeft,
@@ -38,7 +48,9 @@ const ImageBeautifier = ({
   }, [isDark]);
 
   useEffect(() => {
-    if (defaultImg) getFile(defaultImg, "dataURL");
+    if (defaultImg) {
+      getFile(defaultImg, "dataURL");
+    }
   }, [defaultImg]);
 
   return (

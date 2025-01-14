@@ -3,7 +3,17 @@ import { maxBy } from "lodash";
 
 let timer;
 class Editor {
+  /**
+   * {
+   *   src 图片url
+   *   width 图片 width
+   *   height 图片 height
+   *   type 图片类型，默认 image/png
+   *   name 图片名称，默认 ShotEasy.png
+   * }
+   */
   img = {};
+
   invalid = false;
   app = null;
   scale = 100;
@@ -106,6 +116,7 @@ class Editor {
     );
   }
 
+  /** 保存加载的图片信息 */
   setImg(value) {
     this.img = value;
   }
@@ -194,4 +205,5 @@ class Editor {
 }
 
 const editor = new Editor();
+
 export default editor;

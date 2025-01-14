@@ -15,20 +15,28 @@ class Option {
   align = "center";
   waterImg = null;
   waterIndex = 1;
+
+  /** 图片尺寸 */
   size = {
+    /** 类型 */
     type: "auto",
+    /** 图片尺寸标题 */
     title: "Auto",
   };
+
+  /** 设备套壳 - 框架框架宽高 */
   frameConf = {
-    width: 800,
-    height: 600,
+    width: 800, // 大小是由上传的图片确定的
+    height: 600, // 大小是由上传的图片确定的
+    /** 背景色 */
     background: {
-      type: "linear",
+      type: "linear", // 线性渐变
       from: "left",
       to: "right",
-      stops: ["#6366f1", "#a855f7", "#ec4899"],
+      stops: ["#6366f1", "#a855f7", "#ec4899"], // 渐变色
     },
   };
+
   constructor() {
     makeAutoObservable(this);
   }
@@ -71,6 +79,7 @@ class Option {
     this.frameMode = value;
   }
 
+  /** 设备套壳 - 框架框架宽高 */
   setFrameSize(width, height) {
     if (!width || !height) return;
     this.frameConf.width = width;
@@ -108,4 +117,5 @@ class Option {
 }
 
 const option = new Option();
+
 export default option;
