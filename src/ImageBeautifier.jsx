@@ -12,6 +12,7 @@ import useSetImg from "@hooks/useSetImg";
 import stores from "@stores";
 import "@style/main.css";
 import { cn } from "@utils/utils";
+import { autorun } from 'mobx';
 
 /**
  *
@@ -49,6 +50,14 @@ const ImageBeautifier = ({
     }
   }, [defaultImg]);
 
+  // const workplace = stores.editor.img?.src ? <Editor /> : <Init />;
+
+  autorun(() => {
+    if (!stores.editor.isEditing) {
+      stores.editor.setInvalid();
+    }
+  })
+
   return (
     <StyleProvider>
       <ConfigProvider
@@ -71,8 +80,9 @@ const ImageBeautifier = ({
           <Header />
 
           <div className="flex flex-col flex-1 h-0 md:flex-row md:items-stretch">
-            {/* workplace */}
-            {stores.editor.img?.src ? <Editor /> : <Init />}
+            {/* {workplace} */}
+            {/* {stores.editor.img?.src ? <Editor /> : <Init />} */}
+            <Editor />
 
             <SideBar />
           </div>

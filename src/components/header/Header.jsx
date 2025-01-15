@@ -20,9 +20,9 @@ const toolList = [
   "Slash",
   "MoveDownLeft",
   "Pencil",
-  "Magnifier",
+//   "Magnifier",
   "Step",
-  "Smile",
+//   "Smile",
 ];
 
 const Header = () => {
@@ -93,24 +93,24 @@ const Header = () => {
 
       <div className="flex gap-1 justify-center items-center">
         {toolList.map((item) => {
-          if (item === "Smile") {
-            return (
-              <EmojiSelect
-                key={item}
-                disabled={false}
-                theme={stores.editor.isDark ? "dark" : "light"}
-                toSelect={handleSelectEmoji}
-              />
-            );
-          }
+        //   if (item === "Smile") {
+        //     return (
+        //       <EmojiSelect
+        //         key={item}
+        //         disabled={false}
+        //         theme={stores.editor.isDark ? "dark" : "light"}
+        //         toSelect={handleSelectEmoji}
+        //       />
+        //     );
+        //   }
 
           let icon;
           if (item.includes("Fill")) {
             const type = item.replace("Fill", "");
             const Icons = icons[type];
             icon = <Icons size={16} fill="currentColor" />;
-          } else if (item === "Magnifier") {
-            icon = <Icon.MessageCirclePlus size={16} />;
+        //   } else if (item === "Magnifier") {
+        //     icon = <Icon.MessageCirclePlus size={16} />;
           } else if (item === "Step") {
             icon = (
               <div

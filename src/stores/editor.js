@@ -17,6 +17,7 @@ class Editor {
    */
   img = {};
 
+  /** 添加css动画 invalid - 可以删除 */
   invalid = false;
 
   /**  */
@@ -63,8 +64,9 @@ class Editor {
   get isEditing() {
     const is = !!this.app?.tree;
     if (!is) {
+    console.log('is', is)
       this.message.info("Please add a image");
-      this.setInvalid();
+    //   this.setInvalid();
     }
     return is;
   }
@@ -117,6 +119,7 @@ class Editor {
     });
   }
 
+  /** 不是编辑中是，添加 invalid css 动画 */
   setInvalid() {
     clearTimeout(timer);
     this.invalid = true;
