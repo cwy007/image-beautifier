@@ -20,11 +20,14 @@ class Editor {
   /** 添加css动画 invalid - 可以删除 */
   invalid = false;
 
-  /**  */
+  /** 创建好的 App */
   app = null;
 
+  /** 缩放比例 */
   scale = 100;
+  /** 当前使用的标注工具 */
   useTool = null;
+  /** 标准颜色 */
   annotateColor = "#ff0000";
 
   /** 标注线条粗细 */
@@ -49,6 +52,7 @@ class Editor {
     makeLoggable(this);
   }
 
+  /** 已经添加的所有标注 */
   get shapesList() {
     return Array.from(toJS(this.shapes).values());
   }
@@ -61,6 +65,7 @@ class Editor {
       : "auto";
   }
 
+  /** 显示编辑器，正在编辑中 */
   get isEditing() {
     const is = !!this.app?.tree;
     if (!is) {
@@ -71,11 +76,12 @@ class Editor {
     return is;
   }
 
+  /** 下一个步骤 - 步骤的值是自动递增的 */
   get nextStep() {
     const steps = this.shapesList.filter((e) => e.type === "Step");
     const maxItem = maxBy(steps, (item) => Number(item.text));
     if (maxItem?.text) return Number(maxItem.text) + 1;
-    return 1;
+    return 1; // 步骤的开始值是1
   }
 
   /** theme === 'dark' */
@@ -145,10 +151,12 @@ class Editor {
     return this.shapes.get(id);
   }
 
+  /** 添加新的标注 */
   addShape(shape) {
     this.shapes.set(shape.id, shape);
   }
 
+  /** 删除标注 */
   removeShape(shape) {
     this.shapes.delete(shape.id);
     if (this.snap && this.shapesList.every((e) => e.type !== "Magnifier")) {
@@ -156,14 +164,17 @@ class Editor {
     }
   }
 
+  /** 保存创建好的 App  */
   setApp(app) {
     this.app = app;
   }
 
+  /** 页面中显示的当前缩放比例 */
   setScale(value) {
     this.scale = parseInt(value * 100);
   }
 
+  /** 选择/清除当前使用的标注工具 */
   setUseTool(value) {
     this.useTool = value;
     if (value) {
@@ -173,17 +184,27 @@ class Editor {
     }
   }
 
+  /** 标注或移动图片 */
   setSelect(value) {
     if (!this.app) return;
-    this.app.editor.app.config.move.drag = false;
-    this.app.editor.hittable = value;
+    // 平移视图相关配置，应用运行中修改 app.config.move 立即生效。
+    this.app.editor.app.config.move.drag = false; // 为true时，选中标注工具后，不能标注图片，只会移动图片
+    /**
+     * 编辑器是否响应交互事件，默认为 true。
+     * 设为 false 后，将禁用编辑器交互。
+     */
+    this.app.editor.hittable = value; // 这里为true时，可以移动编辑器的位置，也就是移动图片
   }
 
+  /** 设置标注颜色 */
   setAnnotateColor(color) {
     this.annotateColor = color;
     if (!this.app?.editor) return;
+
+    // 选中元素列表，没有时为空数组。
     const { list } = this.app.editor;
     if (!list.length) return;
+
     for (let item of list) {
       const shape = this.shapes.get(item.id);
       if (shape) shape.fill = color;
@@ -208,12 +229,14 @@ class Editor {
     this.clearFun = value;
   }
 
+  /** 清空图片 */
   clearImg() {
     this.img = {};
   }
 
+  /** 删除图片，恢复到 init 状态，需要重新上传图片 */
   destroy() {
-    this.app?.destroy(true);
+    this.app?.destroy(true); // 销毁应用，同步方式
     this.app = null;
     this.snap = null;
     this.shapes.clear();

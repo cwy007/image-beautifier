@@ -179,6 +179,7 @@ export default observer(() => {
           </Tooltip>
         </div>
       </ConfigProvider>
+
       <div className="flex items-center gap-1">
         <Popover
           content={content}
@@ -193,7 +194,8 @@ export default observer(() => {
         >
           <Button size="large" icon={<Icon.Settings2 size={18} />} />
         </Popover>
-        {stores.editor.img?.src && (
+
+        {/* {stores.editor.img?.src && (
           <Popconfirm
             title="Delete the screenshot"
             description="Are you sure to delete this screenshot?"
@@ -204,7 +206,7 @@ export default observer(() => {
           >
             <Button size="large" icon={<Icon.Trash2 size={18} />} />
           </Popconfirm>
-        )}
+        )} */}
       </div>
     </div>
   );

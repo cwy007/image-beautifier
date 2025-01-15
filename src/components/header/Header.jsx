@@ -14,15 +14,15 @@ import EmojiSelect from "./EmojiSelect";
 // import MediaLogo from "./MediaLogo";
 
 const toolList = [
-  "Square",
-  "SquareFill",
-  "Circle",
-  "Slash",
-  "MoveDownLeft",
-  "Pencil",
-//   "Magnifier",
-  "Step",
-//   "Smile",
+  "Square", // 空心方块
+  "SquareFill", // 实体颜色的方块
+  "Circle", // 圆圈
+  "Slash", // 横线
+  "MoveDownLeft", // 箭头
+  "Pencil", // 铅笔
+  "Magnifier", // 放大镜
+  "Step", // 标记步骤
+  // "Smile", // emoji
 ];
 
 const Header = () => {
@@ -30,43 +30,48 @@ const Header = () => {
   // const handleUndo = () => {
   //     stores.editor.createSnap();
   // };
+
+  /** 选择使用的标注工具 */
   const selectTool = (type) => {
     if (!stores.editor.isEditing) return;
+
     const { useTool } = stores.editor;
     stores.editor.setUseTool(useTool === type ? null : type);
     setIsMove(false);
     if (type === "Magnifier") stores.editor.createSnap("init");
   };
 
-  const handleSelectEmoji = (emoji) => {
-    if (!stores.editor.isEditing) return;
-    const x = stores.option.frameConf.width / 2 - 24;
-    const y = stores.option.frameConf.height / 2 - 24;
-    stores.editor.setUseTool(null);
-    setIsMove(false);
-    stores.editor.addShape({
-      id: nanoid(),
-      type: "emoji",
-      text: emoji,
-      zIndex: stores.editor.shapes.size + 1,
-      x,
-      y,
-      editable: true,
-    });
-  };
+//   const handleSelectEmoji = (emoji) => {
+//     if (!stores.editor.isEditing) return;
+//     const x = stores.option.frameConf.width / 2 - 24;
+//     const y = stores.option.frameConf.height / 2 - 24;
+//     stores.editor.setUseTool(null);
+//     setIsMove(false);
+//     stores.editor.addShape({
+//       id: nanoid(),
+//       type: "emoji",
+//       text: emoji,
+//       zIndex: stores.editor.shapes.size + 1,
+//       x,
+//       y,
+//       editable: true,
+//     });
+//   };
 
   const toggleMove = () => {
     if (!stores.editor.isEditing) return;
+
     const is = !isMove;
-    stores.editor.setUseTool(null);
+    stores.editor.setUseTool(null); // 移动
     setIsMove(is);
-    stores.editor.app.config.move.drag = is;
+    stores.editor.app.config.move.drag = is; // 是否可以拖动
   };
 
-  const handleSetTheme = () => {
-    stores.editor.setTheme();
-    localStorage.setItem("SHOTEASY_BEAUTIFIER_THEME", stores.editor.theme);
-  };
+//   const handleSetTheme = () => {
+//     stores.editor.setTheme();
+//     localStorage.setItem("SHOTEASY_BEAUTIFIER_THEME", stores.editor.theme);
+//   };
+
   return (
     <div className="flex items-center justify-center shrink-0 gap-3 bg-white dark:bg-black py-2 px-5 border-b border-b-gray-50 dark:border-b-gray-700 shadow-sm relative z-[11] select-none">
       {/* <div className="flex-1">{headLeft ? headLeft : <Logo />}</div> */}
@@ -109,13 +114,13 @@ const Header = () => {
             const type = item.replace("Fill", "");
             const Icons = icons[type];
             icon = <Icons size={16} fill="currentColor" />;
-        //   } else if (item === "Magnifier") {
-        //     icon = <Icon.MessageCirclePlus size={16} />;
+          } else if (item === "Magnifier") {
+            icon = <Icon.MessageCirclePlus size={16} />;
           } else if (item === "Step") {
             icon = (
               <div
                 key={item}
-                className="border text-xs border-black dark:border-white w-4 h-4 rounded-full text-center leading-4"
+                className="border text-xs border-black dark:border-white w-4 h-4 rounded-full flex items-center justify-center leading-4"
               >
                 {stores.editor.nextStep}
               </div>

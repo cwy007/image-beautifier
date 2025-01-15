@@ -97,4 +97,22 @@
     .invalid {
         animation: shake 0.2s ease-in-out 0s 2;
     }
+
+
+    .border-blue {
+        @apply border-blue-600 border-solid border;
+    }
+
+    .border-red {
+        @apply border-red-600 border-solid border;
+    }
+
+    .black-border {
+        @apply border-black border-solid border;
+    }
+
+    .border-green {
+        @apply border-green-600 border-solid border;
+    }
+
 }

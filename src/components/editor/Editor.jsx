@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { observer } from "mobx-react-lite";
+
 import View from "./View";
 import Zoom from "./Zoom";
 
@@ -14,6 +15,7 @@ const Editor = () => {
       >
         {target && <View target={target} />}
       </div>
+
       <Zoom />
     </div>
   );

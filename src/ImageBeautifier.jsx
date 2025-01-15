@@ -10,7 +10,7 @@ import SideBar from "@components/sideBar/SideBar";
 import Init from "@components/init/Init";
 import useSetImg from "@hooks/useSetImg";
 import stores from "@stores";
-import "@style/main.css";
+import "@style/tailwind.css";
 import { cn } from "@utils/utils";
 import { autorun } from 'mobx';
 
