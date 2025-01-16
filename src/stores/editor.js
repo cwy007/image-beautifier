@@ -69,7 +69,6 @@ class Editor {
   get isEditing() {
     const is = !!this.app?.tree;
     if (!is) {
-    console.log('is', is)
       this.message.info("Please add a image");
     //   this.setInvalid();
     }
