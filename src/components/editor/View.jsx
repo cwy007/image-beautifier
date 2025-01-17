@@ -88,6 +88,7 @@ const View = ({ target }) => {
 
     let shapeId = null;
     const onStart = (arg) => {
+      console.log('stores.editor.useTool', stores.editor.useTool)
       if (!stores.editor.useTool) return;
 
       // target - 是添加的标注步骤
