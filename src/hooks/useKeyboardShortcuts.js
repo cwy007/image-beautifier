@@ -4,7 +4,7 @@ import { tinykeys } from "tinykeys"
 export default function useKeyboardShortcuts(toSave, toCopy, dependencies) {
     const save = useRef(toSave);
     const copy = useRef(toCopy);
-    
+
     useEffect(() => {
         save.current = toSave;
         copy.current = toCopy;
